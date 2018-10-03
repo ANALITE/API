@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import {BrowserRouter, Redirect, Route} from 'react-router-dom';
 import Login from './Login';
+import Signup from './Signup';
 import Main from './Main';
 import logo from './../logo.svg';
 import './../css/App.css';
@@ -26,6 +27,11 @@ const MainView = () => (
 	<Main />
 );
 
+const SignupView = () => (
+	<Signup />
+);
+
+
 class App extends Component {
   render() {
     return (
@@ -39,6 +45,7 @@ class App extends Component {
 				Welcome to Analite.
 			</p>
 			<Route path='/login' component={LoginView}/>
+			<Route path="/signup" component={SignupView}/>
 			<PrivateRoute exact path='/' component={MainView}/>
 		  </div>
 		</BrowserRouter>

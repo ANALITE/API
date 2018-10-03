@@ -1,18 +1,29 @@
-const AxiosInstance = undefined;
-
-const AxiosInit = (accessToken) => {
-	AxiosInstance = axios.create({
-        baseURL: 'http://localhost:8080/api',
-        timeout: 1000,
-        headers: {'Authorization': 'Bearer '+ accessToken}
-	});
-};
+import React from 'react';
+import PropTypes from 'prop-types';
+import {withRouter} from 'react-router-dom';
+import axios from 'axios';
+import Avatar from '@material-ui/core/Avatar';
+import Button from '@material-ui/core/Button';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import FormControl from '@material-ui/core/FormControl';
+import Input from '@material-ui/core/Input';
+import InputLabel from '@material-ui/core/InputLabel';
+import LockIcon from '@material-ui/icons/LockOutlined';
+import Paper from '@material-ui/core/Paper';
+import Typography from '@material-ui/core/Typography';
+import './../css/Login.css'
 
 class Signup extends React.Component{
+
+	static propTypes = {
+		match: PropTypes.object.isRequired,
+		location: PropTypes.object.isRequired,
+		history: PropTypes.object.isRequired
+	}
+
 	constructor(props){
 		super(props);
 		this.state = {user: '', password: '', email: ''};
-		AxiosInit(props.accessToken);
 	}
 	
 	handleSubmit = async e => {
@@ -30,7 +41,7 @@ class Signup extends React.Component{
 	
 	postUser = (user) => {
 		let self = this;
-		AxiosInstance.post('/user', user
+		axios.post('http://localhost:8080/user/', user
 		).then(function(response) {
 			self.props.history.push("/login");
 		}).catch(function(error) {
@@ -97,7 +108,7 @@ class Signup extends React.Component{
                                     id="email"
                                     autoComplete="email"
 									onChange={this.handleEmailChange}
-			                        value={this.email.pass}
+			                        value={this.state.email}
                                 />
                             </FormControl>
                             <Button
@@ -116,3 +127,4 @@ class Signup extends React.Component{
         );
     }
 }
+export default withRouter(Signup);
