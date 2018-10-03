@@ -1,64 +1,62 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import {withRouter} from 'react-router-dom';
-import Avatar from '@material-ui/core/Avatar';
-import Button from '@material-ui/core/Button';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import FormControl from '@material-ui/core/FormControl';
-import Input from '@material-ui/core/Input';
-import InputLabel from '@material-ui/core/InputLabel';
-import LockIcon from '@material-ui/icons/LockOutlined';
-import Paper from '@material-ui/core/Paper';
-import Typography from '@material-ui/core/Typography';
-import './../css/Login.css'
+const AxiosInstance = undefined;
 
-const Auth = {
-	signIn(user, password) {
-		if(user !== "camilo" || password !== "torres") {
-			throw new Error("User is not registered. Click here to create a new account.");
-		} else {
-			localStorage.setItem('hasAuthenticated', true);
-		}
-	}
+const AxiosInit = (accessToken) => {
+	AxiosInstance = axios.create({
+        baseURL: 'http://localhost:8080/api',
+        timeout: 1000,
+        headers: {'Authorization': 'Bearer '+ accessToken}
+	});
 };
 
-class Login extends React.Component {
-	
-	static propTypes = {
-		match: PropTypes.object.isRequired,
-		location: PropTypes.object.isRequired,
-		history: PropTypes.object.isRequired
-	}
-	
+class Signup extends React.Component{
 	constructor(props){
 		super(props);
-		this.state = {userAuthenticated: localStorage.getItem('hasAuthenticated') || false, user: '', pass: ''};
+		this.state = {user: '', password: '', email: ''};
+		AxiosInit(props.accessToken);
 	}
 	
 	handleSubmit = async e => {
 		e.preventDefault();
-		try {
-			await Auth.signIn(this.state.user, this.state.pass);
-			this.props.history.push("/");
-		} catch (e) {
-			this.setState({user: '', pass: ''});
-			alert(e.message);
-		}
+		if (!this.state.user.length || !this.state.password.length || !this.state.email)
+			return;
+		
+		const newUser = {
+			user: this.state.user,
+			password: this.state.password,
+			email: this.state.email
+		};
+		this.postUser(newUser);
 	}
-
+	
+	postUser = (user) => {
+		let self = this;
+		AxiosInstance.post('/user', user
+		).then(function(response) {
+			self.props.history.push("/login");
+		}).catch(function(error) {
+			alert.log(error.msg);
+		});
+	}
+	
+	handleEmailChange = async e => {
+        this.setState({
+            email: e.target.value
+        });
+	}
+	
 	handleUserChange = async e => {
         this.setState({
             user: e.target.value
         });
-    }
-
+	}
+	
 	handlePassChange = async e => {
         this.setState({
             pass: e.target.value
         });
 	}
 	
-    render(){		
+	render(){		
         return (
             <React.Fragment>
                 <CssBaseline />
@@ -74,7 +72,7 @@ class Login extends React.Component {
                                 <Input 
 									id="user" 
 									name="user" 
-									autoComplete="user" 
+									autoComplete="user"
 									autoFocus 
 									onChange={this.handleUserChange}
 									value={this.state.user}
@@ -89,6 +87,17 @@ class Login extends React.Component {
                                     autoComplete="current-password"
 									onChange={this.handlePassChange}
 			                        value={this.state.pass}
+                                />
+                            </FormControl>
+							<FormControl margin="normal" required fullWidth>
+                                <InputLabel htmlFor="email">Email</InputLabel>
+                                <Input
+                                    name="email"
+                                    type="email"
+                                    id="email"
+                                    autoComplete="email"
+									onChange={this.handleEmailChange}
+			                        value={this.email.pass}
                                 />
                             </FormControl>
                             <Button
@@ -106,7 +115,4 @@ class Login extends React.Component {
 			</React.Fragment>
         );
     }
-
 }
-
-export default withRouter(Login)
