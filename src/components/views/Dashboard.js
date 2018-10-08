@@ -10,6 +10,12 @@ import TechCrunchData from '../../rawData/TechCrunchcontinentalUSA.csv'
 import { nodes, links } from '../../rawData/NodeData'
 import NavigationBar from "../dashes/NavigationBar";
 
+const Auth = {
+	signOut () {
+		localStorage.setItem('hasAuthenticated', false);
+	}
+};
+
 class Dashboard extends Component {
     constructor (props) {
         super(props)

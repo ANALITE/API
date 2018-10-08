@@ -67,6 +67,10 @@ class Signup extends React.Component{
         });
 	}
 	
+	handleBackClick = async e => {
+		this.props.history.push('/login');
+	}
+	
 	render(){		
         return (
             <React.Fragment>
@@ -111,15 +115,28 @@ class Signup extends React.Component{
 			                        value={this.state.email}
                                 />
                             </FormControl>
-                            <Button
-                                type="submit"
-                                fullWidth
-                                variant="raised"
-                                color="primary"
-                                className="submit"
-                            >
-                                Sign in
-                            </Button>
+							<FormControl margin="normal">
+								<Button
+									type="submit"
+									fullWidth
+									variant="raised"
+									color="primary"
+									className="submit"
+								>
+									Sign up
+								</Button>
+							</FormControl>
+							<FormControl margin="normal">
+								<Button
+									fullWidth
+									variant="raised"
+									color="secondary"
+									className="submit"
+									onClick={this.handleBackClick}
+								>
+									Back
+								</Button>
+							</FormControl>
                         </form>
                     </Paper>
                 </main>

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import {BrowserRouter, Redirect, Route} from 'react-router-dom';
 import Login from './Login';
+import Signup from './Signup';
 import Main from './Main';
 import Dashboard from './views/Dashboard';
 import InfoBar from "./dashes/InfoBar";
@@ -25,6 +26,10 @@ const LoginView = () => (
 	<Login />
 );
 
+const SignupView = () => (
+	<Signup />
+);
+
 const MainView = () => (
 	<Main />
 );
@@ -44,6 +49,7 @@ class App extends Component {
             <BrowserRouter>
                 <div>
                     <Route path='/login' component={LoginView}/>
+					<Route path='/signup' component={SignupView}/>
                     <PrivateRoute exact path='/' component={MainView}/>
                     <PrivateRoute path='/dashboard' component={DashboardView}/>
                 </div>

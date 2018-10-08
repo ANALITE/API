@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {withRouter, Link} from 'react-router-dom';
+import {withRouter} from 'react-router-dom';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -39,7 +39,7 @@ class Login extends React.Component {
 		e.preventDefault();
 		try {
 			await Auth.signIn(this.state.user, this.state.pass);
-			this.props.history.push("/");
+			this.props.history.push('/dashboard');
 		} catch (e) {
 			this.setState({user: '', pass: ''});
 			alert(e.message);
@@ -59,9 +59,10 @@ class Login extends React.Component {
 	}
 
 	handleSignUpClick = async e => {
-		this.props.hisotry.push("/signup");
+		e.preventDefault();
+		this.props.history.push('/signup');
 	}
-	
+
     render(){		
         return (
             <React.Fragment>
@@ -95,17 +96,28 @@ class Login extends React.Component {
 			                        value={this.state.pass}
                                 />
                             </FormControl>
-                            <Button
-                                type="submit"
-                                fullWidth
-                                variant="raised"
-                                color="primary"
-                                className="submit"
-                            >
-                                Sign in
-                            </Button>
+							<FormControl margin="normal">
+								<Button
+									type="submit"
+									fullWidth
+									variant="raised"
+									color="primary"
+									className="submit"
+								>
+									Sign in
+								</Button>
+							</FormControl>
+							<FormControl margin="normal">
+								<Button
+									fullWidth
+									variant="raised"
+									color="secondary"
+									onClick={this.handleSignUpClick}
+								>
+									Sign Up
+								</Button>
+							</FormControl>
                         </form>
-						<Link to="/signup">Register for Free</Link>
                     </Paper>
                 </main>
 			</React.Fragment>
