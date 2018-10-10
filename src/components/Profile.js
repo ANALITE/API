@@ -13,7 +13,7 @@ import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import './../css/Login.css'
 
-class Signup extends React.Component{
+class Profile extends React.Component{
 
 	static propTypes = {
 		match: PropTypes.object.isRequired,
@@ -36,14 +36,15 @@ class Signup extends React.Component{
 			password: this.state.password,
 			email: this.state.email
 		};
-		this.postUser(newUser);
+		this.updateUser(newUser);
 	}
 	
-	postUser = (user) => {
+	updateUser = (user) => {
 		let self = this;
-		axios.post('http://localhost:8080/user', user
+		axios.put('http://localhost:8080/user/' + sessionStorage.getItem('username'), user
 		).then(function(response) {
-			self.props.history.push("/login");
+			sessionStorage.setItem('username', self.state.username);
+			self.props.history.push("/dashboard");
 			console.log(response);
 		}).catch(function(error) {
 			console.log(error);
@@ -69,7 +70,7 @@ class Signup extends React.Component{
 	}
 	
 	handleBackClick = async e => {
-		this.props.history.push('/login');
+		this.props.history.push('/');
 	}
 	
 	render(){		
@@ -81,7 +82,7 @@ class Signup extends React.Component{
                         <Avatar className="avatar">
                             <LockIcon />
                         </Avatar>
-                        <Typography variant="headline">Sign in</Typography>					
+                        <Typography variant="headline">Edit Profile</Typography>					
                         <form onSubmit={this.handleSubmit} className="form">
                             <FormControl margin="normal" required fullWidth>
                                 <InputLabel htmlFor="username">Username</InputLabel>
@@ -124,7 +125,7 @@ class Signup extends React.Component{
 									color="primary"
 									className="submit"
 								>
-									Sign up
+									Save
 								</Button>
 							</FormControl>
 							<FormControl margin="normal">
@@ -145,4 +146,4 @@ class Signup extends React.Component{
         );
     }
 }
-export default withRouter(Signup);
+export default withRouter(Profile);

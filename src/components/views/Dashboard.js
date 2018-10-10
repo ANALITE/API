@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import '../../css/Dashboard.css';
-
+import {withRouter} from 'react-router-dom';
 import ScatterplotChart from '../statistics/plots/Scatterplot'
 import CustomChart1 from '../statistics/plots/CustomChart1'
 import BarChart from '../statistics/plots/BarChart'
@@ -8,13 +9,8 @@ import BarChart from '../statistics/plots/BarChart'
 import readCsvFile from '../statistics/builds/readCsvFile'
 import TechCrunchData from '../../rawData/TechCrunchcontinentalUSA.csv'
 import { nodes, links } from '../../rawData/NodeData'
+import Button from '@material-ui/core/Button';
 import NavigationBar from "../dashes/NavigationBar";
-
-const Auth = {
-	signOut () {
-		localStorage.setItem('hasAuthenticated', false);
-	}
-};
 
 class Dashboard extends Component {
     constructor (props) {
@@ -24,6 +20,12 @@ class Dashboard extends Component {
         }
     }
 
+	static propTypes = {
+		match: PropTypes.object.isRequired,
+		location: PropTypes.object.isRequired,
+		history: PropTypes.object.isRequired
+	}
+	
     componentDidMount() {
         readCsvFile(TechCrunchData, (data) => {
             this.setState({
@@ -31,6 +33,14 @@ class Dashboard extends Component {
             })
         })
     }
+	
+	logout = async e => {
+		e.preventDefault();
+		this.props.history.push('/login');
+		sessionStorage.setItem('hasAuthenticated', false);
+		sessionStorage.removeItem('accessToken');
+		sessionStorage.removeItem('username');
+	}
 
     render() {
         const { barChartData } = this.state
@@ -39,6 +49,15 @@ class Dashboard extends Component {
         return (
             <div>
                 <NavigationBar />
+				<Button
+					fullWidth
+					variant="raised"
+					color="secondary"
+					className="submit"
+					onClick={this.logout}
+					>
+						Logout
+					</Button>
                 <div className='container mt-5'>
                     <div className='row'>
                         <div className='col border border-default mr-3 widget-box'>
@@ -67,4 +86,4 @@ class Dashboard extends Component {
     }
 }
 
-export default Dashboard
+export default withRouter(Dashboard);

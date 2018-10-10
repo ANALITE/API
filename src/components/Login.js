@@ -1,4 +1,5 @@
 import React from 'react';
+import axios from 'axios';
 import PropTypes from 'prop-types';
 import {withRouter} from 'react-router-dom';
 import Avatar from '@material-ui/core/Avatar';
@@ -12,17 +13,12 @@ import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import '../css/Login.css'
 
-const Auth = {
-	signIn(user, password) {
-		if(user !== "camilo" || password !== "torres") {
-			throw new Error("User is not registered. Click here to create a new account.");
-		} else {
-			localStorage.setItem('hasAuthenticated', true);
-		}
-	}
-};
-
 class Login extends React.Component {
+	
+	constructor(props){
+		super(props);
+		this.state = {userAuthenticated: sessionStorage.getItem('hasAuthenticated') || false, user: '', pass: ''};
+	}
 	
 	static propTypes = {
 		match: PropTypes.object.isRequired,
@@ -30,16 +26,24 @@ class Login extends React.Component {
 		history: PropTypes.object.isRequired
 	}
 	
-	constructor(props){
-		super(props);
-		this.state = {userAuthenticated: localStorage.getItem('hasAuthenticated') || false, user: '', pass: ''};
+	signIn (user){
+		let self = this;
+		axios.post('http://localhost:8080/user/login', user
+		).then(function(response) {
+			sessionStorage.setItem('hasAuthenticated', true);
+			sessionStorage.setItem('username',self.state.user)
+			sessionStorage.setItem('accessToken', response.data.accessToken)
+			self.props.history.push('/');
+		}).catch(function(error) {
+			alert.log(error.msg);
+		});
 	}
 	
 	handleSubmit = async e => {
 		e.preventDefault();
 		try {
-			await Auth.signIn(this.state.user, this.state.pass);
-			this.props.history.push('/dashboard');
+			let userlog = {username: this.state.user, password: this.state.pass, email: ""};
+			await this.signIn(userlog);
 		} catch (e) {
 			this.setState({user: '', pass: ''});
 			alert(e.message);

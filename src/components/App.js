@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import {BrowserRouter, Redirect, Route} from 'react-router-dom';
 import Login from './Login';
+import Profile from './Profile';
 import Signup from './Signup';
 import Main from './Main';
 import Dashboard from './views/Dashboard';
@@ -13,7 +14,7 @@ const PrivateRoute = ({ component: Component, ...rest }) => (
   <Route
     {...rest}
     render={props =>
-		localStorage.getItem('hasAuthenticated') ? (
+		sessionStorage.getItem('hasAuthenticated') ? (
         <Component {...props} />
       ) : (
         <Redirect to={{ pathname: '/login', state: { from: props.location } }}/>
@@ -38,6 +39,11 @@ const DashboardView = () => (
     <Dashboard />
 );
 
+const ProfileView = () => (
+    <Profile/>
+);
+
+
 class App extends Component {
   render() {
     return (
@@ -50,8 +56,9 @@ class App extends Component {
                 <div>
                     <Route path='/login' component={LoginView}/>
 					<Route path='/signup' component={SignupView}/>
-                    <PrivateRoute exact path='/' component={MainView}/>
-                    <PrivateRoute path='/dashboard' component={DashboardView}/>
+                    <PrivateRoute path='/main' component={MainView}/>
+                    <PrivateRoute exact path='/' component={DashboardView}/>
+					<PrivateRoute path='/profile' component={ProfileView}/>
                 </div>
             </BrowserRouter>
             <InfoBar/>

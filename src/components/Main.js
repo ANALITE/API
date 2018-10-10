@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 
 const Auth = {
 	signOut () {
-		localStorage.setItem('hasAuthenticated', false);
+		sessionStorage.setItem('hasAuthenticated', false);
 	}
 };
 
